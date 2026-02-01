@@ -1,52 +1,68 @@
 package main
 
 import (
-	"cmp"
-	"flag"
-	"fmt"
+	"context"
 	"net"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/charmbracelet/log"
-	"github.com/ollama/ollama/api"
+	ollamaapi "github.com/ollama/ollama/api"
+	"google.golang.org/genai"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 
+	"arian-receipts/internal/config"
 	arianv1 "arian-receipts/internal/gen/arian/v1"
 	"arian-receipts/internal/server"
 )
 
 func main() {
-	port := flag.Int("port", 55556, "gRPC server port")
-	jsonLogs := flag.Bool("json", false, "output logs as JSON")
-	flag.Parse()
+	cfg := config.Load()
+
+	var formatter log.Formatter
+	if cfg.LogFormat == "json" {
+		formatter = log.JSONFormatter
+	} else {
+		formatter = log.TextFormatter
+	}
 
 	logger := log.NewWithOptions(os.Stderr, log.Options{
 		ReportTimestamp: true,
+		Level:           cfg.LogLevel,
+		Formatter:       formatter,
 	})
-	if *jsonLogs {
-		logger.SetFormatter(log.JSONFormatter)
+
+	var ocrService *server.Server
+
+	switch cfg.Provider {
+	case "gemini":
+		client, err := genai.NewClient(context.Background(), &genai.ClientConfig{
+			APIKey:  cfg.GeminiAPIKey,
+			Backend: genai.BackendGeminiAPI,
+		})
+		if err != nil {
+			logger.Fatal("failed to create gemini client", "err", err)
+		}
+		ocrService = server.New(nil, client, cfg.GeminiModel, logger)
+
+	default:
+		client, err := ollamaapi.ClientFromEnvironment()
+		if err != nil {
+			logger.Fatal("failed to create ollama client", "err", err)
+		}
+		ocrService = server.New(client, nil, cfg.OllamaModel, logger)
 	}
 
-	model := cmp.Or(os.Getenv("OLLAMA_MODEL"), "qwen2.5vl:3b")
-
-	client, err := api.ClientFromEnvironment()
-	if err != nil {
-		logger.Fatal("failed to create ollama client", "err", err)
-	}
-
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	lis, err := net.Listen("tcp", cfg.ListenAddress)
 	if err != nil {
 		logger.Fatal("failed to listen", "err", err)
 	}
 
 	srv := grpc.NewServer()
-
-	ocrService := server.New(client, model, logger)
 	arianv1.RegisterReceiptOCRServiceServer(srv, ocrService)
 
 	healthSrv := health.NewServer()
@@ -64,7 +80,7 @@ func main() {
 		srv.GracefulStop()
 	}()
 
-	logger.Info("server started", "port", *port, "model", model)
+	logger.Info("server started", "addr", cfg.ListenAddress, "provider", cfg.Provider)
 	if err := srv.Serve(lis); err != nil {
 		logger.Fatal("serve failed", "err", err)
 	}

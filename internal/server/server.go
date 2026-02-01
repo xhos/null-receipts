@@ -1,6 +1,7 @@
 package server
 
 import (
+	"cmp"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/charmbracelet/log"
 	"github.com/ollama/ollama/api"
+	"google.golang.org/genai"
 
 	pb "arian-receipts/internal/gen/arian/v1"
 )
@@ -47,13 +49,14 @@ Rules:
 
 type Server struct {
 	pb.UnimplementedReceiptOCRServiceServer
-	client *api.Client
+	ollama *api.Client
+	gemini *genai.Client
 	model  string
 	log    *log.Logger
 }
 
-func New(client *api.Client, model string, logger *log.Logger) *Server {
-	return &Server{client: client, model: model, log: logger}
+func New(ollama *api.Client, gemini *genai.Client, model string, logger *log.Logger) *Server {
+	return &Server{ollama: ollama, gemini: gemini, model: model, log: logger}
 }
 
 func (s *Server) ParseReceipt(ctx context.Context, req *pb.ParseReceiptRequest) (*pb.ParseReceiptResponse, error) {
@@ -69,9 +72,10 @@ func (s *Server) ParseReceipt(ctx context.Context, req *pb.ParseReceiptRequest) 
 	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
-	raw, err := s.callOllama(ctx, req.ImageData)
+	contentType := cmp.Or(req.ContentType, "image/jpeg")
+	raw, err := s.callModel(ctx, req.ImageData, contentType)
 	if err != nil {
-		s.log.Error("ollama call failed", "err", err)
+		s.log.Error("model call failed", "err", err)
 		if ctx.Err() == context.DeadlineExceeded {
 			return errorResponse(pb.OCRErrorCode_OCR_ERROR_TIMEOUT, "inference timeout"), nil
 		}
@@ -92,17 +96,25 @@ func (s *Server) ParseReceipt(ctx context.Context, req *pb.ParseReceiptRequest) 
 }
 
 func (s *Server) Health(ctx context.Context, _ *pb.HealthRequest) (*pb.HealthResponse, error) {
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
+	if s.ollama != nil {
+		ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+		defer cancel()
 
-	// verify ollama is reachable by listing models
-	_, err := s.client.List(ctx)
-	if err != nil {
-		s.log.Warn("ollama health check failed", "err", err)
-		return &pb.HealthResponse{Status: "unhealthy", Model: s.model}, nil
+		_, err := s.ollama.List(ctx)
+		if err != nil {
+			s.log.Warn("ollama health check failed", "err", err)
+			return &pb.HealthResponse{Status: "unhealthy", Model: s.model}, nil
+		}
 	}
 
 	return &pb.HealthResponse{Status: "ok", Model: s.model}, nil
+}
+
+func (s *Server) callModel(ctx context.Context, imageData []byte, contentType string) (string, error) {
+	if s.gemini != nil {
+		return s.callGemini(ctx, imageData, contentType)
+	}
+	return s.callOllama(ctx, imageData)
 }
 
 func (s *Server) callOllama(ctx context.Context, imageData []byte) (string, error) {
@@ -115,7 +127,7 @@ func (s *Server) callOllama(ctx context.Context, imageData []byte) (string, erro
 	}
 
 	var result string
-	err := s.client.Generate(ctx, req, func(resp api.GenerateResponse) error {
+	err := s.ollama.Generate(ctx, req, func(resp api.GenerateResponse) error {
 		result = resp.Response
 		return nil
 	})
@@ -124,6 +136,20 @@ func (s *Server) callOllama(ctx context.Context, imageData []byte) (string, erro
 	}
 
 	return result, nil
+}
+
+func (s *Server) callGemini(ctx context.Context, imageData []byte, contentType string) (string, error) {
+	parts := []*genai.Part{
+		{Text: prompt},
+		{InlineData: &genai.Blob{MIMEType: contentType, Data: imageData}},
+	}
+
+	resp, err := s.gemini.Models.GenerateContent(ctx, s.model, []*genai.Content{{Parts: parts}}, nil)
+	if err != nil {
+		return "", fmt.Errorf("gemini: %w", err)
+	}
+
+	return resp.Text(), nil
 }
 
 // json types for parsing model output
