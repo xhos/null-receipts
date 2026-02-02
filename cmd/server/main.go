@@ -15,9 +15,9 @@ import (
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 
-	"arian-receipts/internal/config"
-	arianv1 "arian-receipts/internal/gen/arian/v1"
-	"arian-receipts/internal/server"
+	"null-receipts/internal/config"
+	nullv1 "null-receipts/internal/gen/null/v1"
+	"null-receipts/internal/server"
 )
 
 func main() {
@@ -63,7 +63,7 @@ func main() {
 	}
 
 	srv := grpc.NewServer()
-	arianv1.RegisterReceiptOCRServiceServer(srv, ocrService)
+	nullv1.RegisterReceiptOCRServiceServer(srv, ocrService)
 
 	healthSrv := health.NewServer()
 	healthSrv.SetServingStatus("", grpc_health_v1.HealthCheckResponse_SERVING)

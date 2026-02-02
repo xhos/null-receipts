@@ -1,3 +1,5 @@
+// TODO: make it re-use the actual prompt and logic from the main pipeline
+
 package main
 
 import (

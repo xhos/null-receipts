@@ -1,10 +1,11 @@
-# arian-receipts
+# null-receipts
 
-stateless, small gRPC mircoservice that parses receipt images using Qwen2.5-VL via Ollama.
+stateless gRPC mircoservice that parses images of store receipts into JSON using Ollama or Gemini.
 
 ## usage
 
 ```bash
+# if using ollama, qwen2.5vl:3b is recommended
 ollama pull qwen2.5vl:3b
 
 go run ./cmd/server
@@ -46,13 +47,9 @@ regen
 
 ## 🌱 ecosystem
 
-```definition
-arian (n.) /ˈarjan/ [Welsh] Silver; money; wealth.  
-```
-
-- [ariand](https://github.com/xhos/ariand) - main backend service
-- [arian-web](https://github.com/xhos/arian-web) - frontend web application
-- [arian-mobile](https://github.com/xhos/arian-mobile) - mobile appplication
-- [arian-protos](https://github.com/xhos/arian-protos) - shared protobuf definitions
-- [arian-email-parser](https://github.com/xhos/arian-email-parser) - email parsing service
-- [arian-statement-parser](https://github.com/xhos/arian-statement-parser) - bank statement parsing cli tool
+- [null-core](https://github.com/xhos/null-core) - main backend service
+- [null-web](https://github.com/xhos/null-web) - frontend web application
+- [null-mobile](https://github.com/xhos/null-mobile) - mobile appplication
+- [null-protos](https://github.com/xhos/null-protos) - shared protobuf definitions
+- [null-email-parser](https://github.com/xhos/null-email-parser) - email parsing service
+- [null-statement-parser](https://github.com/xhos/null-statement-parser) - bank statement parsing cli tool

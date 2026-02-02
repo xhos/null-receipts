@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: arian-receipts
+  IMAGE_NAME: null-receipts
   REGISTRY: ghcr.io
 
 permissions:
