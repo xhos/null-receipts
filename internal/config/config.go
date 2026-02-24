@@ -21,12 +21,14 @@ type Config struct {
 	GeminiModel  string
 }
 
-func parseAddress(addr string) string {
-	addr = strings.TrimSpace(addr)
-	if strings.Contains(addr, ":") {
-		return addr
+// safely parse whatever port or address the user provides
+// handdles cases like "8080", ":8080", "127.0.0.1:8080"
+func parseAddress(port string) string {
+	port = strings.TrimSpace(port)
+	if strings.Contains(port, ":") {
+		return port
 	}
-	return ":" + addr
+	return ":" + port
 }
 
 func Load() Config {

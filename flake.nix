@@ -46,10 +46,10 @@
           protoc-gen-go
 
           (writeShellScriptBin "run" ''
-            go run cmd/main.go
+            go run cmd/server/main.go
           '')
 
-          (writeShellScriptBin "bump-proto" ''
+          (writeShellScriptBin "bump-protos" ''
             git -C proto fetch origin
             git -C proto checkout main
             git -C proto pull --ff-only

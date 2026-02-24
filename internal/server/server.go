@@ -63,16 +63,19 @@ func (s *Server) ParseReceipt(ctx context.Context, req *pb.ParseReceiptRequest) 
 	imageSize := len(req.ImageData)
 
 	if imageSize == 0 {
+		s.log.Warn("invalid request", "reason", "empty image")
 		return errorResponse(pb.OCRErrorCode_OCR_ERROR_INVALID_IMAGE, "empty image"), nil
 	}
 	if imageSize > maxImageSize {
+		s.log.Warn("invalid request", "reason", "image too large", "size_mb", imageSize/(1<<20))
 		return errorResponse(pb.OCRErrorCode_OCR_ERROR_INVALID_IMAGE, "image exceeds 5MB limit"), nil
 	}
 
+	contentType := cmp.Or(req.ContentType, "image/jpeg")
+	s.log.Info("parsing receipt", "size_kb", imageSize/1024, "content_type", contentType)
+
 	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
-
-	contentType := cmp.Or(req.ContentType, "image/jpeg")
 	raw, err := s.callModel(ctx, req.ImageData, contentType)
 	if err != nil {
 		s.log.Error("model call failed", "err", err)
@@ -90,7 +93,12 @@ func (s *Server) ParseReceipt(ctx context.Context, req *pb.ParseReceiptRequest) 
 
 	receipt.Confidence = calcConfidence(receipt)
 
-	s.log.Info("parsed receipt", "items", len(receipt.Items))
+	s.log.Info("receipt parsed",
+		"merchant", ptrOr(receipt.Merchant, "unknown"),
+		"items", len(receipt.Items),
+		"total", ptrOr(receipt.Total, 0.0),
+		"confidence", receipt.Confidence,
+	)
 
 	return &pb.ParseReceiptResponse{Success: true, Data: receipt}, nil
 }
