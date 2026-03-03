@@ -31,7 +31,7 @@ func main() {
 	}
 
 	logger := log.NewWithOptions(os.Stderr, log.Options{
-		ReportTimestamp: true,
+		ReportTimestamp: cfg.LogFormat == "json",
 		Level:           cfg.LogLevel,
 		Formatter:       formatter,
 	})
