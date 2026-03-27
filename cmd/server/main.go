@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"io"
 	"net"
 	"os"
 	"os/signal"
@@ -23,17 +24,24 @@ import (
 func main() {
 	cfg := config.Load()
 
-	var formatter log.Formatter
-	if cfg.LogFormat == "json" {
-		formatter = log.JSONFormatter
-	} else {
-		formatter = log.TextFormatter
+	logWriter := io.Writer(os.Stderr)
+	logFormatter := log.TextFormatter
+
+	if cfg.LogFormat != "text" {
+		logFile, err := os.OpenFile("null-receipts.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		if err != nil {
+			log.Fatal("failed to create log file", "err", err)
+		}
+		defer logFile.Close()
+
+		logWriter = io.MultiWriter(os.Stderr, logFile)
+		logFormatter = log.JSONFormatter
 	}
 
-	logger := log.NewWithOptions(os.Stderr, log.Options{
-		ReportTimestamp: cfg.LogFormat == "json",
+	logger := log.NewWithOptions(logWriter, log.Options{
+		ReportTimestamp: true,
 		Level:           cfg.LogLevel,
-		Formatter:       formatter,
+		Formatter:       logFormatter,
 	})
 
 	var ocrService *server.Server

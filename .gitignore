@@ -2,8 +2,8 @@
 .direnv
 .pre-commit-config.yaml
 
-# other 
+# other
 data/
 .env
 models/
-old/
+*.log

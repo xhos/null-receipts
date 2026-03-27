@@ -26,7 +26,7 @@ all configuration is done via environment variables. copy `.env.example` to `.en
 |----------|---------|-------------|
 | `LISTEN_ADDRESS` | `127.0.0.1:55556` | server listen address (port, :port, or host:port) |
 | `LOG_LEVEL` | `info` | log level: debug, info, warn, error |
-| `LOG_FORMAT` | `text` | log format: text or json |
+| `LOG_FORMAT` | `text` | log format: text or json. when json, logs are written to both stderr and `null-receipts.log` |
 | `PROVIDER` | `ollama` | inference provider: ollama or gemini |
 | `OLLAMA_HOST` | `http://127.0.0.1:11434` | ollama API endpoint |
 | `OLLAMA_MODEL` | `qwen2.5vl:3b` | ollama model name |
