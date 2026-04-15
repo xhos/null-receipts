@@ -28,13 +28,6 @@ func main() {
 	logFormatter := log.TextFormatter
 
 	if cfg.LogFormat != "text" {
-		logFile, err := os.OpenFile("null-receipts.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-		if err != nil {
-			log.Fatal("failed to create log file", "err", err)
-		}
-		defer logFile.Close()
-
-		logWriter = io.MultiWriter(os.Stderr, logFile)
 		logFormatter = log.JSONFormatter
 	}
 
