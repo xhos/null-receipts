@@ -8,3 +8,4 @@ data/
 models/
 *.log
 result
+tmp/

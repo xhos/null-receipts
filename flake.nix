@@ -61,6 +61,7 @@
           ollama
 
           go
+          air
 
           buf
 
@@ -69,7 +70,7 @@
           protoc-gen-go
 
           (writeShellScriptBin "run" ''
-            go run cmd/server/main.go
+            exec ${air}/bin/air -build.cmd "go build -o ./tmp/main ./cmd/server/main.go" -build.bin ./tmp/main
           '')
 
           (writeShellScriptBin "bump-protos" ''
