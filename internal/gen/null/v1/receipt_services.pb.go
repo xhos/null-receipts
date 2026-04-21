@@ -127,6 +127,158 @@ func (x *UploadReceiptResponse) GetReceipt() *Receipt {
 	return nil
 }
 
+type CreateReceiptRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	TransactionId *int64                 `protobuf:"varint,2,opt,name=transaction_id,json=transactionId,proto3,oneof" json:"transaction_id,omitempty"`
+	Merchant      *string                `protobuf:"bytes,3,opt,name=merchant,proto3,oneof" json:"merchant,omitempty"`
+	ReceiptDate   *date.Date             `protobuf:"bytes,4,opt,name=receipt_date,json=receiptDate,proto3,oneof" json:"receipt_date,omitempty"`
+	Currency      *string                `protobuf:"bytes,5,opt,name=currency,proto3,oneof" json:"currency,omitempty"`
+	SubtotalCents *int64                 `protobuf:"varint,6,opt,name=subtotal_cents,json=subtotalCents,proto3,oneof" json:"subtotal_cents,omitempty"`
+	TaxCents      *int64                 `protobuf:"varint,7,opt,name=tax_cents,json=taxCents,proto3,oneof" json:"tax_cents,omitempty"`
+	TotalCents    *int64                 `protobuf:"varint,8,opt,name=total_cents,json=totalCents,proto3,oneof" json:"total_cents,omitempty"`
+	Items         []*ReceiptItemInput    `protobuf:"bytes,9,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateReceiptRequest) Reset() {
+	*x = CreateReceiptRequest{}
+	mi := &file_null_v1_receipt_services_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateReceiptRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateReceiptRequest) ProtoMessage() {}
+
+func (x *CreateReceiptRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_null_v1_receipt_services_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateReceiptRequest.ProtoReflect.Descriptor instead.
+func (*CreateReceiptRequest) Descriptor() ([]byte, []int) {
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CreateReceiptRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *CreateReceiptRequest) GetTransactionId() int64 {
+	if x != nil && x.TransactionId != nil {
+		return *x.TransactionId
+	}
+	return 0
+}
+
+func (x *CreateReceiptRequest) GetMerchant() string {
+	if x != nil && x.Merchant != nil {
+		return *x.Merchant
+	}
+	return ""
+}
+
+func (x *CreateReceiptRequest) GetReceiptDate() *date.Date {
+	if x != nil {
+		return x.ReceiptDate
+	}
+	return nil
+}
+
+func (x *CreateReceiptRequest) GetCurrency() string {
+	if x != nil && x.Currency != nil {
+		return *x.Currency
+	}
+	return ""
+}
+
+func (x *CreateReceiptRequest) GetSubtotalCents() int64 {
+	if x != nil && x.SubtotalCents != nil {
+		return *x.SubtotalCents
+	}
+	return 0
+}
+
+func (x *CreateReceiptRequest) GetTaxCents() int64 {
+	if x != nil && x.TaxCents != nil {
+		return *x.TaxCents
+	}
+	return 0
+}
+
+func (x *CreateReceiptRequest) GetTotalCents() int64 {
+	if x != nil && x.TotalCents != nil {
+		return *x.TotalCents
+	}
+	return 0
+}
+
+func (x *CreateReceiptRequest) GetItems() []*ReceiptItemInput {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+type CreateReceiptResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Receipt       *Receipt               `protobuf:"bytes,1,opt,name=receipt,proto3" json:"receipt,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateReceiptResponse) Reset() {
+	*x = CreateReceiptResponse{}
+	mi := &file_null_v1_receipt_services_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateReceiptResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateReceiptResponse) ProtoMessage() {}
+
+func (x *CreateReceiptResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_null_v1_receipt_services_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateReceiptResponse.ProtoReflect.Descriptor instead.
+func (*CreateReceiptResponse) Descriptor() ([]byte, []int) {
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CreateReceiptResponse) GetReceipt() *Receipt {
+	if x != nil {
+		return x.Receipt
+	}
+	return nil
+}
+
 type ListReceiptsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -136,13 +288,17 @@ type ListReceiptsRequest struct {
 	UnlinkedOnly  *bool                  `protobuf:"varint,5,opt,name=unlinked_only,json=unlinkedOnly,proto3,oneof" json:"unlinked_only,omitempty"`
 	StartDate     *date.Date             `protobuf:"bytes,6,opt,name=start_date,json=startDate,proto3,oneof" json:"start_date,omitempty"`
 	EndDate       *date.Date             `protobuf:"bytes,7,opt,name=end_date,json=endDate,proto3,oneof" json:"end_date,omitempty"`
+	Query         *string                `protobuf:"bytes,8,opt,name=query,proto3,oneof" json:"query,omitempty"`
+	MinTotalCents *int64                 `protobuf:"varint,9,opt,name=min_total_cents,json=minTotalCents,proto3,oneof" json:"min_total_cents,omitempty"`
+	MaxTotalCents *int64                 `protobuf:"varint,10,opt,name=max_total_cents,json=maxTotalCents,proto3,oneof" json:"max_total_cents,omitempty"`
+	Currency      *string                `protobuf:"bytes,11,opt,name=currency,proto3,oneof" json:"currency,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListReceiptsRequest) Reset() {
 	*x = ListReceiptsRequest{}
-	mi := &file_null_v1_receipt_services_proto_msgTypes[2]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -154,7 +310,7 @@ func (x *ListReceiptsRequest) String() string {
 func (*ListReceiptsRequest) ProtoMessage() {}
 
 func (x *ListReceiptsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_null_v1_receipt_services_proto_msgTypes[2]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -167,7 +323,7 @@ func (x *ListReceiptsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListReceiptsRequest.ProtoReflect.Descriptor instead.
 func (*ListReceiptsRequest) Descriptor() ([]byte, []int) {
-	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{2}
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ListReceiptsRequest) GetUserId() string {
@@ -219,6 +375,34 @@ func (x *ListReceiptsRequest) GetEndDate() *date.Date {
 	return nil
 }
 
+func (x *ListReceiptsRequest) GetQuery() string {
+	if x != nil && x.Query != nil {
+		return *x.Query
+	}
+	return ""
+}
+
+func (x *ListReceiptsRequest) GetMinTotalCents() int64 {
+	if x != nil && x.MinTotalCents != nil {
+		return *x.MinTotalCents
+	}
+	return 0
+}
+
+func (x *ListReceiptsRequest) GetMaxTotalCents() int64 {
+	if x != nil && x.MaxTotalCents != nil {
+		return *x.MaxTotalCents
+	}
+	return 0
+}
+
+func (x *ListReceiptsRequest) GetCurrency() string {
+	if x != nil && x.Currency != nil {
+		return *x.Currency
+	}
+	return ""
+}
+
 type ListReceiptsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Receipts      []*Receipt             `protobuf:"bytes,1,rep,name=receipts,proto3" json:"receipts,omitempty"`
@@ -229,7 +413,7 @@ type ListReceiptsResponse struct {
 
 func (x *ListReceiptsResponse) Reset() {
 	*x = ListReceiptsResponse{}
-	mi := &file_null_v1_receipt_services_proto_msgTypes[3]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -241,7 +425,7 @@ func (x *ListReceiptsResponse) String() string {
 func (*ListReceiptsResponse) ProtoMessage() {}
 
 func (x *ListReceiptsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_null_v1_receipt_services_proto_msgTypes[3]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -254,7 +438,7 @@ func (x *ListReceiptsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListReceiptsResponse.ProtoReflect.Descriptor instead.
 func (*ListReceiptsResponse) Descriptor() ([]byte, []int) {
-	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{3}
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListReceiptsResponse) GetReceipts() []*Receipt {
@@ -281,7 +465,7 @@ type GetReceiptRequest struct {
 
 func (x *GetReceiptRequest) Reset() {
 	*x = GetReceiptRequest{}
-	mi := &file_null_v1_receipt_services_proto_msgTypes[4]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -293,7 +477,7 @@ func (x *GetReceiptRequest) String() string {
 func (*GetReceiptRequest) ProtoMessage() {}
 
 func (x *GetReceiptRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_null_v1_receipt_services_proto_msgTypes[4]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -306,7 +490,7 @@ func (x *GetReceiptRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetReceiptRequest.ProtoReflect.Descriptor instead.
 func (*GetReceiptRequest) Descriptor() ([]byte, []int) {
-	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{4}
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetReceiptRequest) GetUserId() string {
@@ -327,13 +511,14 @@ type GetReceiptResponse struct {
 	state          protoimpl.MessageState  `protogen:"open.v1"`
 	Receipt        *Receipt                `protobuf:"bytes,1,opt,name=receipt,proto3" json:"receipt,omitempty"`
 	LinkCandidates []*ReceiptLinkCandidate `protobuf:"bytes,2,rep,name=link_candidates,json=linkCandidates,proto3" json:"link_candidates,omitempty"`
+	ImageData      []byte                  `protobuf:"bytes,3,opt,name=image_data,json=imageData,proto3" json:"image_data,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
 func (x *GetReceiptResponse) Reset() {
 	*x = GetReceiptResponse{}
-	mi := &file_null_v1_receipt_services_proto_msgTypes[5]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -345,7 +530,7 @@ func (x *GetReceiptResponse) String() string {
 func (*GetReceiptResponse) ProtoMessage() {}
 
 func (x *GetReceiptResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_null_v1_receipt_services_proto_msgTypes[5]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -358,7 +543,7 @@ func (x *GetReceiptResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetReceiptResponse.ProtoReflect.Descriptor instead.
 func (*GetReceiptResponse) Descriptor() ([]byte, []int) {
-	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{5}
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetReceiptResponse) GetReceipt() *Receipt {
@@ -375,6 +560,13 @@ func (x *GetReceiptResponse) GetLinkCandidates() []*ReceiptLinkCandidate {
 	return nil
 }
 
+func (x *GetReceiptResponse) GetImageData() []byte {
+	if x != nil {
+		return x.ImageData
+	}
+	return nil
+}
+
 type UpdateReceiptRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -387,7 +579,7 @@ type UpdateReceiptRequest struct {
 
 func (x *UpdateReceiptRequest) Reset() {
 	*x = UpdateReceiptRequest{}
-	mi := &file_null_v1_receipt_services_proto_msgTypes[6]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -399,7 +591,7 @@ func (x *UpdateReceiptRequest) String() string {
 func (*UpdateReceiptRequest) ProtoMessage() {}
 
 func (x *UpdateReceiptRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_null_v1_receipt_services_proto_msgTypes[6]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -412,7 +604,7 @@ func (x *UpdateReceiptRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateReceiptRequest.ProtoReflect.Descriptor instead.
 func (*UpdateReceiptRequest) Descriptor() ([]byte, []int) {
-	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{6}
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *UpdateReceiptRequest) GetUserId() string {
@@ -450,14 +642,13 @@ type ReceiptItemInput struct {
 	Name           *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	Quantity       float64                `protobuf:"fixed64,4,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	UnitPriceCents int64                  `protobuf:"varint,5,opt,name=unit_price_cents,json=unitPriceCents,proto3" json:"unit_price_cents,omitempty"`
-	CategoryId     *int64                 `protobuf:"varint,6,opt,name=category_id,json=categoryId,proto3,oneof" json:"category_id,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
 func (x *ReceiptItemInput) Reset() {
 	*x = ReceiptItemInput{}
-	mi := &file_null_v1_receipt_services_proto_msgTypes[7]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -469,7 +660,7 @@ func (x *ReceiptItemInput) String() string {
 func (*ReceiptItemInput) ProtoMessage() {}
 
 func (x *ReceiptItemInput) ProtoReflect() protoreflect.Message {
-	mi := &file_null_v1_receipt_services_proto_msgTypes[7]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -482,7 +673,7 @@ func (x *ReceiptItemInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReceiptItemInput.ProtoReflect.Descriptor instead.
 func (*ReceiptItemInput) Descriptor() ([]byte, []int) {
-	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{7}
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ReceiptItemInput) GetId() int64 {
@@ -520,13 +711,6 @@ func (x *ReceiptItemInput) GetUnitPriceCents() int64 {
 	return 0
 }
 
-func (x *ReceiptItemInput) GetCategoryId() int64 {
-	if x != nil && x.CategoryId != nil {
-		return *x.CategoryId
-	}
-	return 0
-}
-
 type UpdateReceiptResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Receipt       *Receipt               `protobuf:"bytes,1,opt,name=receipt,proto3" json:"receipt,omitempty"`
@@ -536,7 +720,7 @@ type UpdateReceiptResponse struct {
 
 func (x *UpdateReceiptResponse) Reset() {
 	*x = UpdateReceiptResponse{}
-	mi := &file_null_v1_receipt_services_proto_msgTypes[8]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -548,7 +732,7 @@ func (x *UpdateReceiptResponse) String() string {
 func (*UpdateReceiptResponse) ProtoMessage() {}
 
 func (x *UpdateReceiptResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_null_v1_receipt_services_proto_msgTypes[8]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -561,7 +745,7 @@ func (x *UpdateReceiptResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateReceiptResponse.ProtoReflect.Descriptor instead.
 func (*UpdateReceiptResponse) Descriptor() ([]byte, []int) {
-	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{8}
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UpdateReceiptResponse) GetReceipt() *Receipt {
@@ -581,7 +765,7 @@ type DeleteReceiptRequest struct {
 
 func (x *DeleteReceiptRequest) Reset() {
 	*x = DeleteReceiptRequest{}
-	mi := &file_null_v1_receipt_services_proto_msgTypes[9]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -593,7 +777,7 @@ func (x *DeleteReceiptRequest) String() string {
 func (*DeleteReceiptRequest) ProtoMessage() {}
 
 func (x *DeleteReceiptRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_null_v1_receipt_services_proto_msgTypes[9]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -606,7 +790,7 @@ func (x *DeleteReceiptRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteReceiptRequest.ProtoReflect.Descriptor instead.
 func (*DeleteReceiptRequest) Descriptor() ([]byte, []int) {
-	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{9}
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *DeleteReceiptRequest) GetUserId() string {
@@ -631,7 +815,7 @@ type DeleteReceiptResponse struct {
 
 func (x *DeleteReceiptResponse) Reset() {
 	*x = DeleteReceiptResponse{}
-	mi := &file_null_v1_receipt_services_proto_msgTypes[10]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -643,7 +827,7 @@ func (x *DeleteReceiptResponse) String() string {
 func (*DeleteReceiptResponse) ProtoMessage() {}
 
 func (x *DeleteReceiptResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_null_v1_receipt_services_proto_msgTypes[10]
+	mi := &file_null_v1_receipt_services_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -656,7 +840,103 @@ func (x *DeleteReceiptResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteReceiptResponse.ProtoReflect.Descriptor instead.
 func (*DeleteReceiptResponse) Descriptor() ([]byte, []int) {
-	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{10}
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{12}
+}
+
+type RetryParseReceiptRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Id            int64                  `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RetryParseReceiptRequest) Reset() {
+	*x = RetryParseReceiptRequest{}
+	mi := &file_null_v1_receipt_services_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RetryParseReceiptRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RetryParseReceiptRequest) ProtoMessage() {}
+
+func (x *RetryParseReceiptRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_null_v1_receipt_services_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RetryParseReceiptRequest.ProtoReflect.Descriptor instead.
+func (*RetryParseReceiptRequest) Descriptor() ([]byte, []int) {
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *RetryParseReceiptRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *RetryParseReceiptRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type RetryParseReceiptResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Receipt       *Receipt               `protobuf:"bytes,1,opt,name=receipt,proto3" json:"receipt,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RetryParseReceiptResponse) Reset() {
+	*x = RetryParseReceiptResponse{}
+	mi := &file_null_v1_receipt_services_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RetryParseReceiptResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RetryParseReceiptResponse) ProtoMessage() {}
+
+func (x *RetryParseReceiptResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_null_v1_receipt_services_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RetryParseReceiptResponse.ProtoReflect.Descriptor instead.
+func (*RetryParseReceiptResponse) Descriptor() ([]byte, []int) {
+	return file_null_v1_receipt_services_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *RetryParseReceiptResponse) GetReceipt() *Receipt {
+	if x != nil {
+		return x.Receipt
+	}
+	return nil
 }
 
 var File_null_v1_receipt_services_proto protoreflect.FileDescriptor
@@ -674,7 +954,28 @@ const file_null_v1_receipt_services_proto_rawDesc = "" +
 	"image/webpR\n" +
 	"image/heicR\vcontentType\"C\n" +
 	"\x15UploadReceiptResponse\x12*\n" +
-	"\areceipt\x18\x01 \x01(\v2\x10.null.v1.ReceiptR\areceipt\"\x9b\x03\n" +
+	"\areceipt\x18\x01 \x01(\v2\x10.null.v1.ReceiptR\areceipt\"\x80\x04\n" +
+	"\x14CreateReceiptRequest\x12!\n" +
+	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\x12*\n" +
+	"\x0etransaction_id\x18\x02 \x01(\x03H\x00R\rtransactionId\x88\x01\x01\x12\x1f\n" +
+	"\bmerchant\x18\x03 \x01(\tH\x01R\bmerchant\x88\x01\x01\x129\n" +
+	"\freceipt_date\x18\x04 \x01(\v2\x11.google.type.DateH\x02R\vreceiptDate\x88\x01\x01\x12)\n" +
+	"\bcurrency\x18\x05 \x01(\tB\b\xbaH\x05r\x03\x98\x01\x03H\x03R\bcurrency\x88\x01\x01\x12*\n" +
+	"\x0esubtotal_cents\x18\x06 \x01(\x03H\x04R\rsubtotalCents\x88\x01\x01\x12 \n" +
+	"\ttax_cents\x18\a \x01(\x03H\x05R\btaxCents\x88\x01\x01\x12$\n" +
+	"\vtotal_cents\x18\b \x01(\x03H\x06R\n" +
+	"totalCents\x88\x01\x01\x12/\n" +
+	"\x05items\x18\t \x03(\v2\x19.null.v1.ReceiptItemInputR\x05itemsB\x11\n" +
+	"\x0f_transaction_idB\v\n" +
+	"\t_merchantB\x0f\n" +
+	"\r_receipt_dateB\v\n" +
+	"\t_currencyB\x11\n" +
+	"\x0f_subtotal_centsB\f\n" +
+	"\n" +
+	"_tax_centsB\x0e\n" +
+	"\f_total_cents\"C\n" +
+	"\x15CreateReceiptResponse\x12*\n" +
+	"\areceipt\x18\x01 \x01(\v2\x10.null.v1.ReceiptR\areceipt\"\xfa\x04\n" +
 	"\x13ListReceiptsRequest\x12!\n" +
 	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\x12$\n" +
 	"\x05limit\x18\x02 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01H\x00R\x05limit\x88\x01\x01\x12$\n" +
@@ -683,52 +984,67 @@ const file_null_v1_receipt_services_proto_rawDesc = "" +
 	"\runlinked_only\x18\x05 \x01(\bH\x03R\funlinkedOnly\x88\x01\x01\x125\n" +
 	"\n" +
 	"start_date\x18\x06 \x01(\v2\x11.google.type.DateH\x04R\tstartDate\x88\x01\x01\x121\n" +
-	"\bend_date\x18\a \x01(\v2\x11.google.type.DateH\x05R\aendDate\x88\x01\x01B\b\n" +
+	"\bend_date\x18\a \x01(\v2\x11.google.type.DateH\x05R\aendDate\x88\x01\x01\x12\x19\n" +
+	"\x05query\x18\b \x01(\tH\x06R\x05query\x88\x01\x01\x12+\n" +
+	"\x0fmin_total_cents\x18\t \x01(\x03H\aR\rminTotalCents\x88\x01\x01\x12+\n" +
+	"\x0fmax_total_cents\x18\n" +
+	" \x01(\x03H\bR\rmaxTotalCents\x88\x01\x01\x12)\n" +
+	"\bcurrency\x18\v \x01(\tB\b\xbaH\x05r\x03\x98\x01\x03H\tR\bcurrency\x88\x01\x01B\b\n" +
 	"\x06_limitB\t\n" +
 	"\a_offsetB\t\n" +
 	"\a_statusB\x10\n" +
 	"\x0e_unlinked_onlyB\r\n" +
 	"\v_start_dateB\v\n" +
-	"\t_end_date\"e\n" +
+	"\t_end_dateB\b\n" +
+	"\x06_queryB\x12\n" +
+	"\x10_min_total_centsB\x12\n" +
+	"\x10_max_total_centsB\v\n" +
+	"\t_currency\"e\n" +
 	"\x14ListReceiptsResponse\x12,\n" +
 	"\breceipts\x18\x01 \x03(\v2\x10.null.v1.ReceiptR\breceipts\x12\x1f\n" +
 	"\vtotal_count\x18\x02 \x01(\x03R\n" +
 	"totalCount\"O\n" +
 	"\x11GetReceiptRequest\x12!\n" +
 	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\x12\x17\n" +
-	"\x02id\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"\x88\x01\n" +
+	"\x02id\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"\xa7\x01\n" +
 	"\x12GetReceiptResponse\x12*\n" +
 	"\areceipt\x18\x01 \x01(\v2\x10.null.v1.ReceiptR\areceipt\x12F\n" +
-	"\x0flink_candidates\x18\x02 \x03(\v2\x1d.null.v1.ReceiptLinkCandidateR\x0elinkCandidates\"\xc2\x01\n" +
+	"\x0flink_candidates\x18\x02 \x03(\v2\x1d.null.v1.ReceiptLinkCandidateR\x0elinkCandidates\x12\x1d\n" +
+	"\n" +
+	"image_data\x18\x03 \x01(\fR\timageData\"\xc2\x01\n" +
 	"\x14UpdateReceiptRequest\x12!\n" +
 	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\x12\x17\n" +
 	"\x02id\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\x12*\n" +
 	"\x0etransaction_id\x18\x03 \x01(\x03H\x00R\rtransactionId\x88\x01\x01\x12/\n" +
 	"\x05items\x18\x04 \x03(\v2\x19.null.v1.ReceiptItemInputR\x05itemsB\x11\n" +
-	"\x0f_transaction_id\"\xdb\x01\n" +
+	"\x0f_transaction_id\"\xa5\x01\n" +
 	"\x10ReceiptItemInput\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x19\n" +
 	"\braw_name\x18\x02 \x01(\tR\arawName\x12\x17\n" +
 	"\x04name\x18\x03 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1a\n" +
 	"\bquantity\x18\x04 \x01(\x01R\bquantity\x12(\n" +
-	"\x10unit_price_cents\x18\x05 \x01(\x03R\x0eunitPriceCents\x12$\n" +
-	"\vcategory_id\x18\x06 \x01(\x03H\x01R\n" +
-	"categoryId\x88\x01\x01B\a\n" +
-	"\x05_nameB\x0e\n" +
-	"\f_category_id\"C\n" +
+	"\x10unit_price_cents\x18\x05 \x01(\x03R\x0eunitPriceCentsB\a\n" +
+	"\x05_name\"C\n" +
 	"\x15UpdateReceiptResponse\x12*\n" +
 	"\areceipt\x18\x01 \x01(\v2\x10.null.v1.ReceiptR\areceipt\"R\n" +
 	"\x14DeleteReceiptRequest\x12!\n" +
 	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\x12\x17\n" +
 	"\x02id\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"\x17\n" +
-	"\x15DeleteReceiptResponse2\x94\x03\n" +
+	"\x15DeleteReceiptResponse\"V\n" +
+	"\x18RetryParseReceiptRequest\x12!\n" +
+	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\x12\x17\n" +
+	"\x02id\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"G\n" +
+	"\x19RetryParseReceiptResponse\x12*\n" +
+	"\areceipt\x18\x01 \x01(\v2\x10.null.v1.ReceiptR\areceipt2\xc0\x04\n" +
 	"\x0eReceiptService\x12N\n" +
-	"\rUploadReceipt\x12\x1d.null.v1.UploadReceiptRequest\x1a\x1e.null.v1.UploadReceiptResponse\x12K\n" +
+	"\rUploadReceipt\x12\x1d.null.v1.UploadReceiptRequest\x1a\x1e.null.v1.UploadReceiptResponse\x12N\n" +
+	"\rCreateReceipt\x12\x1d.null.v1.CreateReceiptRequest\x1a\x1e.null.v1.CreateReceiptResponse\x12K\n" +
 	"\fListReceipts\x12\x1c.null.v1.ListReceiptsRequest\x1a\x1d.null.v1.ListReceiptsResponse\x12E\n" +
 	"\n" +
 	"GetReceipt\x12\x1a.null.v1.GetReceiptRequest\x1a\x1b.null.v1.GetReceiptResponse\x12N\n" +
 	"\rUpdateReceipt\x12\x1d.null.v1.UpdateReceiptRequest\x1a\x1e.null.v1.UpdateReceiptResponse\x12N\n" +
-	"\rDeleteReceipt\x12\x1d.null.v1.DeleteReceiptRequest\x1a\x1e.null.v1.DeleteReceiptResponseB\x8d\x01\n" +
+	"\rDeleteReceipt\x12\x1d.null.v1.DeleteReceiptRequest\x1a\x1e.null.v1.DeleteReceiptResponse\x12Z\n" +
+	"\x11RetryParseReceipt\x12!.null.v1.RetryParseReceiptRequest\x1a\".null.v1.RetryParseReceiptResponseB\x8d\x01\n" +
 	"\vcom.null.v1B\x14ReceiptServicesProtoP\x01Z)null-receipts/internal/gen/null/v1;nullv1\xa2\x02\x03NXX\xaa\x02\aNull.V1\xca\x02\bNull_\\V1\xe2\x02\x14Null_\\V1\\GPBMetadata\xea\x02\bNull::V1b\x06proto3"
 
 var (
@@ -743,49 +1059,61 @@ func file_null_v1_receipt_services_proto_rawDescGZIP() []byte {
 	return file_null_v1_receipt_services_proto_rawDescData
 }
 
-var file_null_v1_receipt_services_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_null_v1_receipt_services_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_null_v1_receipt_services_proto_goTypes = []any{
-	(*UploadReceiptRequest)(nil),  // 0: null.v1.UploadReceiptRequest
-	(*UploadReceiptResponse)(nil), // 1: null.v1.UploadReceiptResponse
-	(*ListReceiptsRequest)(nil),   // 2: null.v1.ListReceiptsRequest
-	(*ListReceiptsResponse)(nil),  // 3: null.v1.ListReceiptsResponse
-	(*GetReceiptRequest)(nil),     // 4: null.v1.GetReceiptRequest
-	(*GetReceiptResponse)(nil),    // 5: null.v1.GetReceiptResponse
-	(*UpdateReceiptRequest)(nil),  // 6: null.v1.UpdateReceiptRequest
-	(*ReceiptItemInput)(nil),      // 7: null.v1.ReceiptItemInput
-	(*UpdateReceiptResponse)(nil), // 8: null.v1.UpdateReceiptResponse
-	(*DeleteReceiptRequest)(nil),  // 9: null.v1.DeleteReceiptRequest
-	(*DeleteReceiptResponse)(nil), // 10: null.v1.DeleteReceiptResponse
-	(*Receipt)(nil),               // 11: null.v1.Receipt
-	(ReceiptStatus)(0),            // 12: null.v1.ReceiptStatus
-	(*date.Date)(nil),             // 13: google.type.Date
-	(*ReceiptLinkCandidate)(nil),  // 14: null.v1.ReceiptLinkCandidate
+	(*UploadReceiptRequest)(nil),      // 0: null.v1.UploadReceiptRequest
+	(*UploadReceiptResponse)(nil),     // 1: null.v1.UploadReceiptResponse
+	(*CreateReceiptRequest)(nil),      // 2: null.v1.CreateReceiptRequest
+	(*CreateReceiptResponse)(nil),     // 3: null.v1.CreateReceiptResponse
+	(*ListReceiptsRequest)(nil),       // 4: null.v1.ListReceiptsRequest
+	(*ListReceiptsResponse)(nil),      // 5: null.v1.ListReceiptsResponse
+	(*GetReceiptRequest)(nil),         // 6: null.v1.GetReceiptRequest
+	(*GetReceiptResponse)(nil),        // 7: null.v1.GetReceiptResponse
+	(*UpdateReceiptRequest)(nil),      // 8: null.v1.UpdateReceiptRequest
+	(*ReceiptItemInput)(nil),          // 9: null.v1.ReceiptItemInput
+	(*UpdateReceiptResponse)(nil),     // 10: null.v1.UpdateReceiptResponse
+	(*DeleteReceiptRequest)(nil),      // 11: null.v1.DeleteReceiptRequest
+	(*DeleteReceiptResponse)(nil),     // 12: null.v1.DeleteReceiptResponse
+	(*RetryParseReceiptRequest)(nil),  // 13: null.v1.RetryParseReceiptRequest
+	(*RetryParseReceiptResponse)(nil), // 14: null.v1.RetryParseReceiptResponse
+	(*Receipt)(nil),                   // 15: null.v1.Receipt
+	(*date.Date)(nil),                 // 16: google.type.Date
+	(ReceiptStatus)(0),                // 17: null.v1.ReceiptStatus
+	(*ReceiptLinkCandidate)(nil),      // 18: null.v1.ReceiptLinkCandidate
 }
 var file_null_v1_receipt_services_proto_depIdxs = []int32{
-	11, // 0: null.v1.UploadReceiptResponse.receipt:type_name -> null.v1.Receipt
-	12, // 1: null.v1.ListReceiptsRequest.status:type_name -> null.v1.ReceiptStatus
-	13, // 2: null.v1.ListReceiptsRequest.start_date:type_name -> google.type.Date
-	13, // 3: null.v1.ListReceiptsRequest.end_date:type_name -> google.type.Date
-	11, // 4: null.v1.ListReceiptsResponse.receipts:type_name -> null.v1.Receipt
-	11, // 5: null.v1.GetReceiptResponse.receipt:type_name -> null.v1.Receipt
-	14, // 6: null.v1.GetReceiptResponse.link_candidates:type_name -> null.v1.ReceiptLinkCandidate
-	7,  // 7: null.v1.UpdateReceiptRequest.items:type_name -> null.v1.ReceiptItemInput
-	11, // 8: null.v1.UpdateReceiptResponse.receipt:type_name -> null.v1.Receipt
-	0,  // 9: null.v1.ReceiptService.UploadReceipt:input_type -> null.v1.UploadReceiptRequest
-	2,  // 10: null.v1.ReceiptService.ListReceipts:input_type -> null.v1.ListReceiptsRequest
-	4,  // 11: null.v1.ReceiptService.GetReceipt:input_type -> null.v1.GetReceiptRequest
-	6,  // 12: null.v1.ReceiptService.UpdateReceipt:input_type -> null.v1.UpdateReceiptRequest
-	9,  // 13: null.v1.ReceiptService.DeleteReceipt:input_type -> null.v1.DeleteReceiptRequest
-	1,  // 14: null.v1.ReceiptService.UploadReceipt:output_type -> null.v1.UploadReceiptResponse
-	3,  // 15: null.v1.ReceiptService.ListReceipts:output_type -> null.v1.ListReceiptsResponse
-	5,  // 16: null.v1.ReceiptService.GetReceipt:output_type -> null.v1.GetReceiptResponse
-	8,  // 17: null.v1.ReceiptService.UpdateReceipt:output_type -> null.v1.UpdateReceiptResponse
-	10, // 18: null.v1.ReceiptService.DeleteReceipt:output_type -> null.v1.DeleteReceiptResponse
-	14, // [14:19] is the sub-list for method output_type
-	9,  // [9:14] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	15, // 0: null.v1.UploadReceiptResponse.receipt:type_name -> null.v1.Receipt
+	16, // 1: null.v1.CreateReceiptRequest.receipt_date:type_name -> google.type.Date
+	9,  // 2: null.v1.CreateReceiptRequest.items:type_name -> null.v1.ReceiptItemInput
+	15, // 3: null.v1.CreateReceiptResponse.receipt:type_name -> null.v1.Receipt
+	17, // 4: null.v1.ListReceiptsRequest.status:type_name -> null.v1.ReceiptStatus
+	16, // 5: null.v1.ListReceiptsRequest.start_date:type_name -> google.type.Date
+	16, // 6: null.v1.ListReceiptsRequest.end_date:type_name -> google.type.Date
+	15, // 7: null.v1.ListReceiptsResponse.receipts:type_name -> null.v1.Receipt
+	15, // 8: null.v1.GetReceiptResponse.receipt:type_name -> null.v1.Receipt
+	18, // 9: null.v1.GetReceiptResponse.link_candidates:type_name -> null.v1.ReceiptLinkCandidate
+	9,  // 10: null.v1.UpdateReceiptRequest.items:type_name -> null.v1.ReceiptItemInput
+	15, // 11: null.v1.UpdateReceiptResponse.receipt:type_name -> null.v1.Receipt
+	15, // 12: null.v1.RetryParseReceiptResponse.receipt:type_name -> null.v1.Receipt
+	0,  // 13: null.v1.ReceiptService.UploadReceipt:input_type -> null.v1.UploadReceiptRequest
+	2,  // 14: null.v1.ReceiptService.CreateReceipt:input_type -> null.v1.CreateReceiptRequest
+	4,  // 15: null.v1.ReceiptService.ListReceipts:input_type -> null.v1.ListReceiptsRequest
+	6,  // 16: null.v1.ReceiptService.GetReceipt:input_type -> null.v1.GetReceiptRequest
+	8,  // 17: null.v1.ReceiptService.UpdateReceipt:input_type -> null.v1.UpdateReceiptRequest
+	11, // 18: null.v1.ReceiptService.DeleteReceipt:input_type -> null.v1.DeleteReceiptRequest
+	13, // 19: null.v1.ReceiptService.RetryParseReceipt:input_type -> null.v1.RetryParseReceiptRequest
+	1,  // 20: null.v1.ReceiptService.UploadReceipt:output_type -> null.v1.UploadReceiptResponse
+	3,  // 21: null.v1.ReceiptService.CreateReceipt:output_type -> null.v1.CreateReceiptResponse
+	5,  // 22: null.v1.ReceiptService.ListReceipts:output_type -> null.v1.ListReceiptsResponse
+	7,  // 23: null.v1.ReceiptService.GetReceipt:output_type -> null.v1.GetReceiptResponse
+	10, // 24: null.v1.ReceiptService.UpdateReceipt:output_type -> null.v1.UpdateReceiptResponse
+	12, // 25: null.v1.ReceiptService.DeleteReceipt:output_type -> null.v1.DeleteReceiptResponse
+	14, // 26: null.v1.ReceiptService.RetryParseReceipt:output_type -> null.v1.RetryParseReceiptResponse
+	20, // [20:27] is the sub-list for method output_type
+	13, // [13:20] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_null_v1_receipt_services_proto_init() }
@@ -795,15 +1123,16 @@ func file_null_v1_receipt_services_proto_init() {
 	}
 	file_null_v1_receipt_proto_init()
 	file_null_v1_receipt_services_proto_msgTypes[2].OneofWrappers = []any{}
-	file_null_v1_receipt_services_proto_msgTypes[6].OneofWrappers = []any{}
-	file_null_v1_receipt_services_proto_msgTypes[7].OneofWrappers = []any{}
+	file_null_v1_receipt_services_proto_msgTypes[4].OneofWrappers = []any{}
+	file_null_v1_receipt_services_proto_msgTypes[8].OneofWrappers = []any{}
+	file_null_v1_receipt_services_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_null_v1_receipt_services_proto_rawDesc), len(file_null_v1_receipt_services_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -32,7 +32,7 @@ type Transaction struct {
 	Direction TransactionDirection   `protobuf:"varint,4,opt,name=direction,proto3,enum=null.v1.TransactionDirection" json:"direction,omitempty"`
 	AccountId int64                  `protobuf:"varint,5,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
 	// metadata
-	EmailId     *string `protobuf:"bytes,6,opt,name=email_id,json=emailId,proto3,oneof" json:"email_id,omitempty"`
+	ExternalId  *string `protobuf:"bytes,6,opt,name=external_id,json=externalId,proto3,oneof" json:"external_id,omitempty"`
 	Description *string `protobuf:"bytes,7,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	// categorization
 	CategoryId          *int64 `protobuf:"varint,8,opt,name=category_id,json=categoryId,proto3,oneof" json:"category_id,omitempty"`
@@ -49,8 +49,13 @@ type Transaction struct {
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,16,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,17,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	// additional fields for API responses
-	Category      *Category `protobuf:"bytes,18,opt,name=category,proto3,oneof" json:"category,omitempty"`
-	AccountName   *string   `protobuf:"bytes,19,opt,name=account_name,json=accountName,proto3,oneof" json:"account_name,omitempty"`
+	Category    *Category `protobuf:"bytes,18,opt,name=category,proto3,oneof" json:"category,omitempty"`
+	AccountName *string   `protobuf:"bytes,19,opt,name=account_name,json=accountName,proto3,oneof" json:"account_name,omitempty"`
+	ReceiptId   *int64    `protobuf:"varint,20,opt,name=receipt_id,json=receiptId,proto3,oneof" json:"receipt_id,omitempty"`
+	// splitting
+	SplitFromId   *int64         `protobuf:"varint,21,opt,name=split_from_id,json=splitFromId,proto3,oneof" json:"split_from_id,omitempty"`
+	Forgiven      bool           `protobuf:"varint,22,opt,name=forgiven,proto3" json:"forgiven,omitempty"`
+	Splits        []*Transaction `protobuf:"bytes,23,rep,name=splits,proto3" json:"splits,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -120,9 +125,9 @@ func (x *Transaction) GetAccountId() int64 {
 	return 0
 }
 
-func (x *Transaction) GetEmailId() string {
-	if x != nil && x.EmailId != nil {
-		return *x.EmailId
+func (x *Transaction) GetExternalId() string {
+	if x != nil && x.ExternalId != nil {
+		return *x.ExternalId
 	}
 	return ""
 }
@@ -216,6 +221,34 @@ func (x *Transaction) GetAccountName() string {
 		return *x.AccountName
 	}
 	return ""
+}
+
+func (x *Transaction) GetReceiptId() int64 {
+	if x != nil && x.ReceiptId != nil {
+		return *x.ReceiptId
+	}
+	return 0
+}
+
+func (x *Transaction) GetSplitFromId() int64 {
+	if x != nil && x.SplitFromId != nil {
+		return *x.SplitFromId
+	}
+	return 0
+}
+
+func (x *Transaction) GetForgiven() bool {
+	if x != nil {
+		return x.Forgiven
+	}
+	return false
+}
+
+func (x *Transaction) GetSplits() []*Transaction {
+	if x != nil {
+		return x.Splits
+	}
+	return nil
 }
 
 type TransactionWithScore struct {
@@ -334,15 +367,17 @@ var File_null_v1_transaction_proto protoreflect.FileDescriptor
 
 const file_null_v1_transaction_proto_rawDesc = "" +
 	"\n" +
-	"\x19null/v1/transaction.proto\x12\anull.v1\x1a\x16null/v1/category.proto\x1a\x13null/v1/enums.proto\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17google/type/money.proto\"\xd1\b\n" +
+	"\x19null/v1/transaction.proto\x12\anull.v1\x1a\x16null/v1/category.proto\x1a\x17google/type/money.proto\x1a\x13null/v1/enums.proto\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x92\n" +
+	"\n" +
 	"\vTransaction\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x123\n" +
 	"\atx_date\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x06txDate\x12/\n" +
 	"\ttx_amount\x18\x03 \x01(\v2\x12.google.type.MoneyR\btxAmount\x12;\n" +
 	"\tdirection\x18\x04 \x01(\x0e2\x1d.null.v1.TransactionDirectionR\tdirection\x12\x1d\n" +
 	"\n" +
-	"account_id\x18\x05 \x01(\x03R\taccountId\x12\x1e\n" +
-	"\bemail_id\x18\x06 \x01(\tH\x00R\aemailId\x88\x01\x01\x12/\n" +
+	"account_id\x18\x05 \x01(\x03R\taccountId\x12$\n" +
+	"\vexternal_id\x18\x06 \x01(\tH\x00R\n" +
+	"externalId\x88\x01\x01\x12/\n" +
 	"\vdescription\x18\a \x01(\tB\b\xbaH\x05r\x03\x18\xf4\x03H\x01R\vdescription\x88\x01\x01\x12-\n" +
 	"\vcategory_id\x18\b \x01(\x03B\a\xbaH\x04\"\x02 \x00H\x02R\n" +
 	"categoryId\x88\x01\x01\x122\n" +
@@ -360,8 +395,14 @@ const file_null_v1_transaction_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x122\n" +
 	"\bcategory\x18\x12 \x01(\v2\x11.null.v1.CategoryH\bR\bcategory\x88\x01\x01\x12&\n" +
-	"\faccount_name\x18\x13 \x01(\tH\tR\vaccountName\x88\x01\x01B\v\n" +
-	"\t_email_idB\x0e\n" +
+	"\faccount_name\x18\x13 \x01(\tH\tR\vaccountName\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"receipt_id\x18\x14 \x01(\x03H\n" +
+	"R\treceiptId\x88\x01\x01\x12'\n" +
+	"\rsplit_from_id\x18\x15 \x01(\x03H\vR\vsplitFromId\x88\x01\x01\x12\x1a\n" +
+	"\bforgiven\x18\x16 \x01(\bR\bforgiven\x12,\n" +
+	"\x06splits\x18\x17 \x03(\v2\x14.null.v1.TransactionR\x06splitsB\x0e\n" +
+	"\f_external_idB\x0e\n" +
 	"\f_descriptionB\x0e\n" +
 	"\f_category_idB\v\n" +
 	"\t_merchantB\r\n" +
@@ -370,7 +411,9 @@ const file_null_v1_transaction_proto_rawDesc = "" +
 	"\x0f_foreign_amountB\x10\n" +
 	"\x0e_exchange_rateB\v\n" +
 	"\t_categoryB\x0f\n" +
-	"\r_account_name\"u\n" +
+	"\r_account_nameB\r\n" +
+	"\v_receipt_idB\x10\n" +
+	"\x0e_split_from_id\"u\n" +
 	"\x14TransactionWithScore\x126\n" +
 	"\vtransaction\x18\x01 \x01(\v2\x14.null.v1.TransactionR\vtransaction\x12%\n" +
 	"\x0emerchant_score\x18\x02 \x01(\x01R\rmerchantScore\"\x8a\x01\n" +
@@ -404,20 +447,21 @@ var file_null_v1_transaction_proto_goTypes = []any{
 	(*Category)(nil),                  // 6: null.v1.Category
 }
 var file_null_v1_transaction_proto_depIdxs = []int32{
-	3, // 0: null.v1.Transaction.tx_date:type_name -> google.protobuf.Timestamp
-	4, // 1: null.v1.Transaction.tx_amount:type_name -> google.type.Money
-	5, // 2: null.v1.Transaction.direction:type_name -> null.v1.TransactionDirection
-	4, // 3: null.v1.Transaction.balance_after:type_name -> google.type.Money
-	4, // 4: null.v1.Transaction.foreign_amount:type_name -> google.type.Money
-	3, // 5: null.v1.Transaction.created_at:type_name -> google.protobuf.Timestamp
-	3, // 6: null.v1.Transaction.updated_at:type_name -> google.protobuf.Timestamp
-	6, // 7: null.v1.Transaction.category:type_name -> null.v1.Category
-	0, // 8: null.v1.TransactionWithScore.transaction:type_name -> null.v1.Transaction
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	3,  // 0: null.v1.Transaction.tx_date:type_name -> google.protobuf.Timestamp
+	4,  // 1: null.v1.Transaction.tx_amount:type_name -> google.type.Money
+	5,  // 2: null.v1.Transaction.direction:type_name -> null.v1.TransactionDirection
+	4,  // 3: null.v1.Transaction.balance_after:type_name -> google.type.Money
+	4,  // 4: null.v1.Transaction.foreign_amount:type_name -> google.type.Money
+	3,  // 5: null.v1.Transaction.created_at:type_name -> google.protobuf.Timestamp
+	3,  // 6: null.v1.Transaction.updated_at:type_name -> google.protobuf.Timestamp
+	6,  // 7: null.v1.Transaction.category:type_name -> null.v1.Category
+	0,  // 8: null.v1.Transaction.splits:type_name -> null.v1.Transaction
+	0,  // 9: null.v1.TransactionWithScore.transaction:type_name -> null.v1.Transaction
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_null_v1_transaction_proto_init() }
