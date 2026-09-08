@@ -138,7 +138,7 @@ func processImage(imagePath string) Result {
 		result.Error = fmt.Sprintf("ollama request failed: %v", err)
 		return result
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	body, _ := io.ReadAll(resp.Body)
 
@@ -181,7 +181,7 @@ func loadAndResizeImage(imagePath string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	img, _, err := image.Decode(f)
 	if err != nil {

@@ -10,28 +10,29 @@
     nixpkgs,
     git-hooks,
   }: let
+    systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
     forAllSystems = f:
-      nixpkgs.lib.genAttrs
-      ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"]
-      (system: f nixpkgs.legacyPackages.${system});
+      nixpkgs.lib.genAttrs systems (system: f system nixpkgs.legacyPackages.${system});
   in {
-    checks = forAllSystems (pkgs: {
-      pre-commit = git-hooks.lib.${pkgs.system}.run {
+    checks = forAllSystems (system: pkgs: {
+      pre-commit = git-hooks.lib.${system}.run {
         src = ./.;
         hooks = {
-          gotest.enable = true;
-          govet.enable = true;
           alejandra.enable = true;
+          # golangci-lint and gotest shell out to `go`, which the hook env lacks
           golangci-lint = {
             enable = true;
-            name = "golangci-lint";
-            entry = "${pkgs.golangci-lint}/bin/golangci-lint fmt";
-            types = ["go"];
+            extraPackages = [pkgs.go];
+          };
+
+          gotest = {
+            enable = true;
+            stages = ["pre-push"];
+            extraPackages = [pkgs.go];
           };
 
           nix-build = {
             enable = true;
-            name = "nix-build";
             entry = pkgs.lib.getExe (pkgs.writeShellApplication {
               name = "nix-build-check";
               runtimeInputs = [pkgs.nix];
@@ -45,7 +46,7 @@
       };
     });
 
-    packages = forAllSystems (pkgs: {
+    packages = forAllSystems (system: pkgs: {
       default = pkgs.buildGoModule {
         pname = "null-receipts";
         version = self.shortRev or self.dirtyShortRev or "dev";
@@ -55,45 +56,44 @@
       };
     });
 
-    devShells = forAllSystems (pkgs: {
+    devShells = forAllSystems (system: pkgs: {
       default = pkgs.mkShell {
         packages = with pkgs; [
-          ollama
-
           go
+          golangci-lint
           air
 
           buf
-
+          protoc-gen-go
           protoc-gen-go-grpc
           protoc-gen-connect-go
-          protoc-gen-go
+
+          ollama
 
           (writeShellScriptBin "run" ''
             exec ${air}/bin/air -build.cmd "go build -o ./tmp/main ./cmd/server/main.go" -build.bin ./tmp/main
           '')
 
-          (writeShellScriptBin "bump-protos" ''
-            git -C proto fetch origin
-            git -C proto checkout main
-            git -C proto pull --ff-only
-            git add proto
-            git commit -m "chore: bump proto files"
-            git push
+          (writeShellScriptBin "regen" ''
+            rm -rf internal/gen
+            ${buf}/bin/buf generate
           '')
 
-          (writeShellScriptBin "regen" ''
-            rm -rf internal/gen/
-            ${buf}/bin/buf generate
+          (writeShellScriptBin "bump-protos" ''
+            set -e
+            git submodule update --remote --checkout proto
+            git add proto
+            git commit -m "chore: bump protos"
+            git push
           '')
         ];
 
         env.OLLAMA_MODELS = "./models";
 
-        shellHook = "${self.checks.${pkgs.system}.pre-commit.shellHook}";
+        shellHook = self.checks.${system}.pre-commit.shellHook;
       };
     });
 
-    formatter = forAllSystems (pkgs: pkgs.alejandra);
+    formatter = forAllSystems (system: pkgs: pkgs.alejandra);
   };
 }
